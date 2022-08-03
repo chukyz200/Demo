@@ -7,7 +7,9 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.movieApp.R
 import com.example.movieApp.databinding.FragmentMovieDetailBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail) {
 
     private val args by navArgs<MovieDetailFragmentArgs>()

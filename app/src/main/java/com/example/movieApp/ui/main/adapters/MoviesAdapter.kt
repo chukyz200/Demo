@@ -31,7 +31,7 @@ class MoviesAdapter(
 
         return holder
     }
-pr
+
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         when (holder) {
             is UpcomingMoviesViewHolder -> holder.bind(moviesList[position])

@@ -3,8 +3,9 @@ package com.example.movieApp.data.local
 import com.example.movieApp.data.model.MovieEntity
 import com.example.movieApp.data.model.MovieList
 import com.example.movieApp.data.model.toMovieList
+import javax.inject.Inject
 
-class LocalMovieDataSource(private val movieDao: MovieDao) {
+class LocalMovieDataSource @Inject constructor(private val movieDao: MovieDao) {
 
     suspend fun getUpcomingMovies(): MovieList {
         return movieDao.getAllMovies().filter { it.movie_type == "upcoming" }.toMovieList()

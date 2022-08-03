@@ -5,8 +5,11 @@ import com.example.movieApp.data.local.LocalMovieDataSource
 import com.example.movieApp.data.model.MovieList
 import com.example.movieApp.data.model.toMovieEntity
 import com.example.movieApp.data.remote.RemoteMovieDataSource
+import dagger.hilt.android.scopes.ActivityRetainedScoped
+import javax.inject.Inject
 
-class MovieRepositoryImpl(
+
+class MovieRepositoryImpl @Inject constructor(
     private val dataSourceRemote: RemoteMovieDataSource,
     private val dataSourceLocal: LocalMovieDataSource
 ) : MovieRepository {

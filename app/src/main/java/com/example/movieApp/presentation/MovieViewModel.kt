@@ -1,26 +1,43 @@
 package com.example.movieApp.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.liveData
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.*
 import com.example.movieApp.core.Resource
+import com.example.movieApp.data.model.MovieList
 import com.example.movieApp.domain.MovieRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class MovieViewModel(private val repo: MovieRepository) : ViewModel() {
 
-    fun fetchMainScreenMovies() = liveData(Dispatchers.IO) {
-        emit(Resource.Loading())
-        try {
-            emit(Resource.Success(Triple(repo.getUpcomingMovies(),repo.getTopRatedMovies(),repo.getPopularMovies())))
-        } catch (e: Exception) {
-            emit(Resource.Failure(e))
+class MovieViewModel @ViewModelInject constructor(
+    private val repo: MovieRepository,
+    @Assisted private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+
+    private val _movies: MutableLiveData<Resource<Triple<MovieList, MovieList, MovieList>>> =
+        MutableLiveData(Resource.Loading())
+    val movies: LiveData<Resource<Triple<MovieList, MovieList, MovieList>>> = _movies
+
+    init {
+        fetchMainScreenMovies()
+    }
+
+    private fun fetchMainScreenMovies() =
+        viewModelScope.launch(viewModelScope.coroutineContext + Dispatchers.IO) {
+            kotlin.runCatching {
+                Resource.Success(
+                    Triple(
+                        repo.getUpcomingMovies(),
+                        repo.getTopRatedMovies(),
+                        repo.getPopularMovies()
+                    )
+                )
+            }.onSuccess {
+                _movies.postValue(it)
+            }.onFailure {
+                _movies.postValue(Resource.Failure(Exception(it)))
+            }
         }
-    }
-}
-
-class MovieViewModelFactory(private val repo: MovieRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(MovieRepository::class.java).newInstance(repo)
-    }
 }

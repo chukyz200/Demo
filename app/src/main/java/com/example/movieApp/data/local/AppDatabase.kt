@@ -11,22 +11,4 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun movieDao(): MovieDao
 
-    companion object {
-
-        private var INSTANCE: AppDatabase? = null
-
-        fun getDatabase(context: Context): AppDatabase {
-            INSTANCE = INSTANCE ?: Room.databaseBuilder(
-                context.applicationContext,
-                AppDatabase::class.java,
-                "movie_table"
-            ).build()
-            return INSTANCE!!
-        }
-
-        fun destroyInstance() {
-            INSTANCE = null
-        }
-    }
-
 }

@@ -1,6 +1,7 @@
 package com.example.movieApp.domain
 
 import com.example.movieApp.application.AppConstants
+import com.example.movieApp.application.AppConstants.API_KEY_VALUE
 import com.example.movieApp.data.model.MovieList
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
@@ -10,22 +11,11 @@ import retrofit2.http.Query
 
 interface WebService {
     @GET("movie/upcoming")
-    suspend fun getUpcomingMovies(@Query ("api_key") apiKey: String): MovieList
+    suspend fun getUpcomingMovies(@Query(API_KEY_VALUE) apiKey: String): MovieList
 
     @GET("movie/top_rated")
-    suspend fun getTopRatedMovies(@Query ("api_key") apiKey: String): MovieList
+    suspend fun getTopRatedMovies(@Query(API_KEY_VALUE) apiKey: String): MovieList
 
     @GET("movie/popular")
-    suspend fun getPopulardMovies(@Query ("api_key") apiKey: String): MovieList
-}
-
-object RetrofitClient {
-
-    val webservice by lazy {
-        Retrofit.Builder()
-            .baseUrl(AppConstants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build().create(WebService::class.java)
-    }
-
+    suspend fun getPopularMovies(@Query(API_KEY_VALUE) apiKey: String): MovieList
 }

@@ -3,8 +3,9 @@ package com.example.movieApp.data.remote
 import com.example.movieApp.application.AppConstants
 import com.example.movieApp.data.model.MovieList
 import com.example.movieApp.domain.WebService
+import javax.inject.Inject
 
-class RemoteMovieDataSource(private val webService: WebService) {
+class RemoteMovieDataSource @Inject constructor(private val webService: WebService) {
 
     suspend fun getUpcomingMovies(): MovieList {
         return webService.getUpcomingMovies(AppConstants.API_KEY)
@@ -15,6 +16,6 @@ class RemoteMovieDataSource(private val webService: WebService) {
     }
 
     suspend fun getPopularMovies(): MovieList {
-        return webService.getPopulardMovies(AppConstants.API_KEY)
+        return webService.getPopularMovies(AppConstants.API_KEY)
     }
 }

@@ -6,38 +6,27 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import com.example.movieApp.R
 import com.example.movieApp.core.Resource
-import com.example.movieApp.data.local.AppDatabase
-import com.example.movieApp.data.local.LocalMovieDataSource
 import com.example.movieApp.data.model.Movie
-import com.example.movieApp.data.remote.RemoteMovieDataSource
 import com.example.movieApp.databinding.FragmentMovieBinding
-import com.example.movieApp.domain.MovieRepositoryImpl
-import com.example.movieApp.domain.RetrofitClient
 import com.example.movieApp.presentation.MovieViewModel
-import com.example.movieApp.presentation.MovieViewModelFactory
 import com.example.movieApp.ui.main.adapters.MoviesAdapter
 import com.example.movieApp.ui.main.adapters.concat.PopularConcatAdapter
 import com.example.movieApp.ui.main.adapters.concat.TopRatedConcatAdapter
 import com.example.movieApp.ui.main.adapters.concat.UpcomingConcatAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MovieFragment : Fragment(R.layout.fragment_movie), MoviesAdapter.OnMovieClickListener {
 
     private lateinit var concatAdapter: ConcatAdapter
     private lateinit var binding: FragmentMovieBinding
-    private val viewModel by viewModels<MovieViewModel> {
-        MovieViewModelFactory(
-            MovieRepositoryImpl(
-                RemoteMovieDataSource(RetrofitClient.webservice),
-                LocalMovieDataSource(AppDatabase.getDatabase(requireContext()).movieDao())
-            )
-        )
-    }
+
+
+    private val viewModel by viewModels<MovieViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,7 +34,7 @@ class MovieFragment : Fragment(R.layout.fragment_movie), MoviesAdapter.OnMovieCl
 
         concatAdapter = ConcatAdapter()
 
-        viewModel.fetchMainScreenMovies().observe(viewLifecycleOwner, Observer {
+        viewModel.movies.observe(viewLifecycleOwner){
             when (it) {
                 is Resource.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
@@ -91,7 +80,7 @@ class MovieFragment : Fragment(R.layout.fragment_movie), MoviesAdapter.OnMovieCl
                         .show()
                 }
             }
-        })
+        }
     }
 
     override fun onMovieClick(movie: Movie) {
