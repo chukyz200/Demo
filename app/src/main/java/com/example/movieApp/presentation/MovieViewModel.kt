@@ -1,18 +1,18 @@
 package com.example.movieApp.presentation
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.example.movieApp.core.Resource
 import com.example.movieApp.data.model.MovieList
 import com.example.movieApp.domain.MovieRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class MovieViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MovieViewModel @Inject constructor(
     private val repo: MovieRepository,
-    @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
 

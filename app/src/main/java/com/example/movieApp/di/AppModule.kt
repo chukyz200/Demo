@@ -4,19 +4,21 @@ import android.content.Context
 import androidx.room.Room
 import com.example.movieApp.application.AppConstants
 import com.example.movieApp.data.local.AppDatabase
+import com.example.movieApp.domain.MovieRepository
+import com.example.movieApp.domain.MovieRepositoryImpl
 import com.example.movieApp.domain.WebService
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 @Module
 object AppModule {
 
@@ -43,4 +45,8 @@ object AppModule {
     @Provides
     fun provideWebService(retrofit: Retrofit): WebService = retrofit.create(WebService::class.java)
 
+
+    @Singleton
+    @Provides
+    fun provideRepository(repositoryImpl: MovieRepositoryImpl): MovieRepository = repositoryImpl
 }
